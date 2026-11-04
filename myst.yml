@@ -38,6 +38,7 @@ project:
     - plugins/typst_conversion-support.mjs
     - plugins/lightbox.mjs
     - https://github.com/choldgraf/myst-iconify/releases/latest/download/index.mjs
+    - plugins/editor_local.mjs
 
 extends:
   - toc.yml             # includes table of contents
