@@ -12,14 +12,7 @@ project:
       name: dr. ir. Freek Pols
       affiliations:
         - tud
-    - id: committee-1
-      name: Prof. Dr. C. Examiner
-      affiliations:
-        - tud
-    - id: committee-2
-      name: Dr. D. Examiner
-      affiliations:
-        - tud
+
 
   affiliations:
     - id: tud
