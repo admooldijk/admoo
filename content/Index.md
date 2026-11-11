@@ -15,8 +15,7 @@ no-update-date: true
 
 +++ { "kind": "split-image" }
 
-## The TUD starterkit for open publishing with JupyterBook
-
+## Ad's project
 a quick setup for your open publishing project.
 
 {button}`Use this template <https://github.com/new?template_name=starterkit&template_owner=TUD-JB-OS>`  
