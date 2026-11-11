@@ -9,6 +9,7 @@ import path from "node:path";
 const archive = path.resolve("editor-dist", "myst-editor.tar.gz");
 const localEditorPath = path.resolve("editor");
 const htmlDest = path.resolve("_build", "html", "editor");
+const stagingDest = path.resolve("_build", "cache", "editor-dist");
 
 let installTask = null;
 
@@ -20,6 +21,19 @@ function overlayDirectory(sourceDir, targetDir) {
     entry.isDirectory() ? overlayDirectory(s, t) : fs.copyFileSync(s, t);
   }
 }
+
+function installTo(targetDir) {
+  if (!fs.existsSync(stagingDest)) return;
+  fs.mkdirSync(targetDir, { recursive: true });
+  overlayDirectory(stagingDest, targetDir);
+}
+
+process.on("exit", () => {
+  const htmlRoot = path.resolve("_build", "html");
+  if (fs.existsSync(htmlRoot)) {
+    installTo(htmlDest);
+  }
+});
 
 export const plugin = {
   name: "editor-local",
@@ -37,9 +51,10 @@ export const plugin = {
           throw new Error("[Editor Plugin] editor-dist/myst-editor.tar.gz was not found; run ./update-editor.sh first.");
         }
         installTask ??= (async () => {
-          fs.mkdirSync(htmlDest, { recursive: true });
-          execSync(`tar -xzf "${archive}" -C "${htmlDest}" --strip-components=1`);
-          overlayDirectory(localEditorPath, htmlDest);
+          fs.mkdirSync(stagingDest, { recursive: true });
+          execSync(`tar -xzf "${archive}" -C "${stagingDest}" --strip-components=1`);
+          overlayDirectory(localEditorPath, stagingDest);
+          installTo(htmlDest);
           const version = fs.existsSync("editor-dist/VERSION") ? fs.readFileSync("editor-dist/VERSION", "utf8").trim() : "unknown";
           console.log(`[Editor Plugin] Installed the local editor build (${version}).`);
         })();
